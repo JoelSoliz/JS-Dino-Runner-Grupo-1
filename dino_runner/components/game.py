@@ -1,9 +1,10 @@
 import pygame
 from dino_runner.components.dinosaur import Dinosaur
+from dino_runner.components.message import draw_message_component
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.score import Score
 
-from dino_runner.utils.constants import BG, FONT_STYLE, ICON, RUNNING, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
+from dino_runner.utils.constants import BG, ICON, RUNNING, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
 
 
 class Game:
@@ -36,11 +37,16 @@ class Game:
     def run(self):
         # Game loop: events - update - draw
         self.playing = True
-        self.obstacle_manager.reset_obstacles()
+        self.reset_game()
         while self.playing:
             self.events()
             self.update()
             self.draw()
+
+    def reset_game(self):
+        self.game_speed = 20
+        self.obstacle_manager.reset_obstacles()
+        self.score.restart_score()
 
     def events(self):
         for event in pygame.event.get():
@@ -77,16 +83,19 @@ class Game:
         half_screen_height = SCREEN_HEIGHT // 2
         half_screen_width = SCREEN_WIDTH // 2
         if self.death_count == 0: # mostrar mensaje de bienvenida *
-            font = pygame.font.Font(FONT_STYLE, 30)
-            text_component = font.render("Press any key to start", True, (0, 0, 0))
-            text_rect = text_component.get_rect()
-            text_rect.center = (half_screen_width, half_screen_height)
-            self.screen.blit(text_component, text_rect)
+            draw_message_component("Press any key to start", self.screen)
         else:
-            # mostrar mensaje de volver a jugar (tarea)
-            # Mostrar el numero de muertes actuales
-            # Mostrar el puntaje
-            pass
+            draw_message_component("Press any key to restart", self.screen)
+            draw_message_component(
+                f"Your Score: {self.score.score}",
+                self.screen,
+                pos_y_center=half_screen_height + 50
+            )
+            draw_message_component(
+                f"Death count: {self.death_count}",
+                self.screen,
+                pos_y_center=half_screen_height + 100
+            )
 
         self.screen.blit(RUNNING[0], (half_screen_width - 30, half_screen_height - 140)) # mostrar un icono *
         pygame.display.update() # actualizar ventana *
