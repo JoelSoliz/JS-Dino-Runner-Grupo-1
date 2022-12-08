@@ -16,8 +16,9 @@ def draw_message_component(
     pos_y_center=SCREEN_HEIGHT // 2,
     pos_x_center=SCREEN_WIDTH // 2
 ):
-    font = pygame.font.Font(FONT_STYLE, font_size)
-    text = font.render(message, True, font_color)
-    text_rect = text.get_rect()
-    text_rect.center = (pos_x_center, pos_y_center)
-    screen.blit(text, text_rect)
+    if True:
+        font = pygame.font.Font(FONT_STYLE, font_size)
+        text = font.render(message, True, font_color)
+        text_rect = text.get_rect()
+        text_rect.center = (pos_x_center, pos_y_center)
+        screen.blit(text, text_rect)
